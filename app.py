@@ -1,6 +1,8 @@
 from flask import Flask, render_template, request, redirect, url_for
 from models import db, Expense
 from datetime import datetime
+import pandas as pd
+import plotly.express as px
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///expenses.db'
@@ -32,8 +34,21 @@ def add_expense():
 @app.route('/report')
 def report():
     expenses = Expense.query.all()
-    total_amount = sum(expense.amount for expense in expenses)
-    return render_template('report.html', expenses=expenses, total_amount=total_amount)
+    if not expenses:
+        return render_template('report.html', plot_div=None)
+    
+    data = [{
+        'Amount': expense.amount,
+        'Category': expense.category
+    } for expense in expenses]
+    
+    df = pd.DataFrame(data)
+
+    fig = px.pie(df, names='Category', values='Amount', title='Wydatki według kategorii')
+
+    plot_div = fig.to_html(full_html=False)
+
+    return render_template('report.html', plot_div=plot_div)
 
 if __name__ == '__main__':
     app.run(debug=True)

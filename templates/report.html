@@ -2,7 +2,15 @@
 
 {% block content %}
   <h2>Raport wydatków</h2>
-  <p>Wykres wkrótce będzie dodany.</p>
-
+  
+  {% if plot_div %}
+    <div>
+      <h3>Wykres wydatków</h3>
+      {{ plot_div|safe }}
+    </div>
+  {% else %}
+    <p>Brak danych do wyświetlenia.</p>
+  {% endif %}
+  
   <a class="btn btn-secondary mt-3" href="{{ url_for('index') }}">Powrót do strony głównej</a>
 {% endblock %}

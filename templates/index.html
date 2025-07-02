@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <a class="btn btn-primary mb-3" href="{{ url_for('add_expense') }}">Dodaj wydatek</a>
+
+  {% if expenses %}
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Data</th>
+          <th>Kategoria</th>
+          <th>Kwota</th>
+          <th>Opis</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for expense in expenses %}
+          <tr>
+            <td>{{ expense.date }}</td>
+            <td>{{ expense.category }}</td>
+            <td>{{ expense.amount }}</td>
+            <td>{{ expense.description }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>Brak wydatków do wyświetlenia.</p>
+  {% endif %}
+
+  <a class="btn btn-secondary" href="{{ url_for('report') }}">Zobacz raport</a>
+{% endblock %}

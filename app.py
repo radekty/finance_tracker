@@ -31,6 +31,13 @@ def add_expense():
 
     return render_template('add_expense.html')
 
+@app.route('/delete/<int:expense_id>', methods=['POST'])
+def delete_expense(expense_id):
+    expense = Expense.query.get_or_404(expense_id)
+    db.session.delete(expense)
+    db.session.commit()
+    return redirect(url_for('index'))
+
 @app.route('/report')
 def report():
     expenses = Expense.query.all()

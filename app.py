@@ -38,6 +38,20 @@ def delete_expense(expense_id):
     db.session.commit()
     return redirect(url_for('index'))
 
+@app.route('/edit/<int:expense_id>', methods=['GET', 'POST'])
+def edit_expense(expense_id):
+    expense = Expense.query.get_or_404(expense_id)
+    if request.method == 'POST':
+        expense.amount = float(request.form['amount'])
+        expense.category = request.form['category']
+        expense.description = request.form['description']
+        expense.date = datetime.strptime(request.form['date'], '%Y-%m-%d')
+
+        db.session.commit()
+        return redirect(url_for('index'))
+
+    return render_template('edit_expense.html', expense=expense)
+
 @app.route('/report')
 def report():
     expenses = Expense.query.all()

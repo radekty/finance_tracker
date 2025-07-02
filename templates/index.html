@@ -3,6 +3,23 @@
 {% block content %}
   <a class="btn btn-primary mb-3" href="{{ url_for('add_expense') }}">Dodaj wydatek</a>
 
+   <form method="GET" action="{{ url_for('index') }}" class="row g-3 mb-3">
+    <div class="col-auto">
+      <label for="start_date" class="form-label">Od:</label>
+      <input type="date" id="start_date" name="start_date" class="form-control"
+             value="{{ start_date or '' }}">
+    </div>
+    <div class="col-auto">
+      <label for="end_date" class="form-label">Do:</label>
+      <input type="date" id="end_date" name="end_date" class="form-control"
+             value="{{ end_date or '' }}">
+    </div>
+    <div class="col-auto align-self-end">
+      <button type="submit" class="btn btn-primary">Filtruj</button>
+      <a href="{{ url_for('index') }}" class="btn btn-secondary">Pokaż wszystko</a>
+    </div>
+  </form>
+
   {% if expenses %}
     <table class="table table-striped">
       <thead>

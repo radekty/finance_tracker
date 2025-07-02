@@ -13,8 +13,19 @@ with app.app_context():
 
 @app.route('/')
 def index():
-    expenses = Expense.query.all()
-    return render_template('index.html', expenses=expenses)
+    start_date = request.args.get('start_date')
+    end_date = request.args.get('end_date')
+
+    query = Expense.query
+
+    if start_date:
+        query = query.filter(Expense.date >= start_date)
+    if end_date:
+        query = query.filter(Expense.date <= end_date)
+    
+    expenses = query.order_by(Expense.date.desc()).all()
+
+    return render_template('index.html', expenses=expenses, start_date=start_date, end_date=end_date)
 
 @app.route('/add', methods=['GET', 'POST'])
 def add_expense():
@@ -54,7 +65,18 @@ def edit_expense(expense_id):
 
 @app.route('/report')
 def report():
-    expenses = Expense.query.all()
+    start_date = request.args.get('start_date')
+    end_date = request.args.get('end_date')
+
+    query = Expense.query
+
+    if start_date:
+        query = query.filter(Expense.date >= start_date)
+    if end_date:
+        query = query.filter(Expense.date <= end_date)
+
+    expenses = query.all()
+
     if not expenses:
         return render_template('report.html', plot_div=None)
     
@@ -69,7 +91,7 @@ def report():
 
     plot_div = fig.to_html(full_html=False)
 
-    return render_template('report.html', plot_div=plot_div)
+    return render_template('report.html', plot_div=plot_div, start_date=start_date, end_date=end_date)
 
 if __name__ == '__main__':
     app.run(debug=True)
